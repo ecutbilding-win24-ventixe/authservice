@@ -1,27 +1,33 @@
 ﻿using Presentation.Models;
-using System.Reflection;
+using System.Net.Http.Json;
 
 namespace Presentation.Services;
 
 public class AuthService
 {
+    private readonly HttpClient _httpClient;
 
-    public async Task<bool> AlreadyExistsAsync(string email)
+    public AuthService(HttpClient httpClient)
     {
-        using var http = new HttpClient();
-        var response = await http.GetFromJsonAsync<AccountServiceResult>($"https://localhost:7274/api/accounts?email={email}").Result;
-        return response.Succeeded;
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri("http://localhost:5002");
     }
 
-    public async Task<AuthServiceResult> SignUp(SignUpModel model)
+    public async Task<AccountServiceResult> SignUp(SignUpModel model)
     {
-        var exists = await AlreadyExistsAsync(model.Email);
-        if (!exists)
+        try
         {
-            return null;
-        }
+            var response = await _httpClient.PostAsJsonAsync("/api/accounts/signup", model);
 
-        using var http = new HttpClient();
-        var response = http.PostAsJsonAsync("https://localhost:7274/api/accounts", model).Result;
+            if (!response.IsSuccessStatusCode)
+                return new AccountServiceResult { Succeeded = false, StatusCode = (int)response.StatusCode, Message = "Failed to create account" };
+
+            var result = await response.Content.ReadFromJsonAsync<AccountServiceResult>();
+            return result ?? new AccountServiceResult { Succeeded = false, StatusCode = 500, Message = "Failed to parse response" };
+        }
+        catch (Exception ex)
+        {
+            return new AccountServiceResult { Succeeded = false, StatusCode = 500, Message = $"Server error: {ex.Message}" };
+        }
     }
 }
