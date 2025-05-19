@@ -10,7 +10,7 @@ public class AuthService
     public AuthService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri("http://localhost:5002");
+        _httpClient.BaseAddress = new Uri("https://ventixe-accountservice-dwdudheubmdnczct.swedencentral-01.azurewebsites.net/");
     }
 
     public async Task<AccountServiceResult> SignUp(SignUpModel model)

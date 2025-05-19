@@ -13,7 +13,6 @@ builder.Services.AddSwaggerGen(c =>
     {
         Version = "v1",
         Title = "AuthService API",
-        Description = "AuthService mikroservisi",
     });
 });
 
