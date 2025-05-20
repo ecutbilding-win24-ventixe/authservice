@@ -29,7 +29,6 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors();
-app.MapGrpcService<AuthServiceProtoService>();
 app.MapControllers();
 app.MapSwagger();
 app.UseSwaggerUI(c =>
