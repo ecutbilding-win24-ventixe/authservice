@@ -23,4 +23,17 @@ public class AuthController(AuthService authService) : ControllerBase
 
         return Ok(new { message = "Account created successfully" });
     }
+
+    [HttpPost("signin")]
+    public async Task<IActionResult> SignIn([FromBody] SignInModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _authService.SingInAsync(model);
+        if (!result.Succeeded)
+            return BadRequest(new { message = result.Message });
+
+        return Ok(new { token = result.Token, email = result.Email });
+    }
 }
