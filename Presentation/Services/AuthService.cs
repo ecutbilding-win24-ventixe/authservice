@@ -49,7 +49,8 @@ public class AuthService
                 StatusCode = 200,
                 Message = json.GetProperty("message").GetString(),
                 Token = json.GetProperty("token").GetString(),
-                Email = json.GetProperty("email").GetString()
+                Email = json.GetProperty("email").GetString(),
+                UserId = json.GetProperty("userId").GetString()
             };
         }
         catch (Exception ex)

@@ -34,6 +34,6 @@ public class AuthController(AuthService authService) : ControllerBase
         if (!result.Succeeded)
             return BadRequest(new { message = result.Message });
 
-        return Ok(new { token = result.Token, email = result.Email });
+        return Ok(new { token = result.Token, email = result.Email, userId = result.UserId });
     }
 }
